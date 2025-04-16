@@ -3,6 +3,7 @@
 import { useGameDetail } from '@/lib/useGameDetail'
 import { Dialog } from '@headlessui/react'
 import { Fragment } from 'react'
+import Loading from "@/components/Loading";
 
 type GameModalProps = {
     gameId: number
@@ -15,33 +16,66 @@ export default function GameModal({ gameId, isOpen, onClose }: GameModalProps) {
 
     return (
         <Dialog open={isOpen} onClose={onClose} as={Fragment}>
-            <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
-                <Dialog.Panel className="bg-white max-w-2xl w-full rounded-lg shadow-xl p-6 overflow-y-auto max-h-[90vh]">
-                    <Dialog.Title className="text-2xl font-bold mb-2 text-black">{data?.name}</Dialog.Title>
-
-                    {isLoading && <p>Načítám detail...</p>}
-                    {isError && <p>Chyba při načítání detailu.</p>}
-
-                    {data && (
-                        <>
-                            {data.background_image && (
-                                <img src={data.background_image} alt={data.name} className="w-full rounded mb-4" />
-                            )}
-                            <p className="text-sm text-gray-500 mb-2">Vydáno: {data.released}</p>
-                            <p className="mb-4 text-gray-700">{data.description_raw}</p>
-                            <div className="flex flex-wrap gap-2 text-sm">
-                                {data.genres.map((genre) => (
-                                    <span key={genre.id} className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded">
-                    {genre.name}
-                  </span>
-                                ))}
-                            </div>
-                        </>
-                    )}
-
-                    <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
+            <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                <Dialog.Panel className="bg-zinc-900 text-white max-w-5xl w-full rounded-xl shadow-xl p-6 overflow-y-auto max-h-[90vh] relative">
+                    {/* Close button */}
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl"
+                    >
                         ×
                     </button>
+
+                    {/* Loading / Error */}
+                    {isLoading && <Loading/>}
+                    {isError && <p className="text-center text-red-400">Chyba při načítání detailu.</p>}
+
+                    {/* Content */}
+                    {data && (
+                        <>
+                            {/* Title */}
+                            <Dialog.Title className="text-3xl font-bold mb-4">{data.name}</Dialog.Title>
+
+
+                            {/* Image */}
+                            {data.background_image && (
+                                <img
+                                    src={data.background_image}
+                                    alt={data.name}
+                                    className="w-full h-64 object-cover rounded-lg mb-6"
+                                />
+                            )}
+
+                            {/* Info Grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-sm text-zinc-300">
+                                <div>
+                                    <p className="mb-1">📅 Vydání:</p>
+                                    <p className="text-white">{data.released || 'Neznámé'}</p>
+                                </div>
+                                <div>
+                                    <p className="mb-1">⭐ Hodnocení:</p>
+                                    <p className="text-yellow-400">{data.rating?.toFixed(1) ?? 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="mb-1">🏷️ Žánry:</p>
+                                    <p className="text-white">
+                                        {data.genres?.map((g) => g.name).join(', ') || 'Neznámé'}
+                                    </p>
+                                </div>
+
+
+
+                            </div>
+
+                            {/* Description */}
+                            {data.description_raw && (
+                                <div className="mb-4 text-sm leading-relaxed text-zinc-300">
+                                    <h3 className="text-lg font-semibold mb-2 text-white">📖 Popis</h3>
+                                    <p>{data.description_raw}</p>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </Dialog.Panel>
             </div>
         </Dialog>

@@ -10,7 +10,7 @@ export default function GameCard({ game, onClick }: GameCardProps) {
     return (
         <div
             onClick={onClick}
-            className="bg-white dark:bg-zinc-900 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all cursor-pointer"
+            className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 rounded-xl overflow-hidden shadow hover:shadow-xl transition"
         >
             {game.background_image && (
                 <img
@@ -20,18 +20,14 @@ export default function GameCard({ game, onClick }: GameCardProps) {
                 />
             )}
             <div className="p-4">
-                <h2 className="text-lg font-semibold text-zinc-800 dark:text-white mb-1">
-                    {game.name}
-                </h2>
+                <h3 className="text-base font-semibold">{game.name}</h3>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
                     {game.released ? `🎯 ${game.released}` : 'Datum neuveden'}
                 </p>
-                <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                    💻 {game.platforms.map((p) => p.platform.name).join(', ')}
+                <p className="text-sm text-zinc-400">
+                    🎮 {game.platforms.map(p => p.platform.name).join(', ')}
                 </p>
-                <p className="text-sm text-yellow-600 mt-1">
-                    ⭐ {game.rating.toFixed(1)}
-                </p>
+                <p className="text-sm text-yellow-500 mt-1">⭐ {game.rating.toFixed(1)}</p>
             </div>
         </div>
     )

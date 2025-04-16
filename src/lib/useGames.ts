@@ -39,7 +39,7 @@ export const useGames = (
             }
             return undefined
         },
-        initialPageParam: 1,
+        initialPageParam: 1, // 🔧 Tohle je to, co TypeScript vyžaduje
     })
 
 }
