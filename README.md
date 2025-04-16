@@ -4,6 +4,12 @@ A modern and stylish web app for discovering indie games using the [RAWG Video G
 
 ---
 
+## 📸 Screenshots
+
+![app-view.png](screenshots/app-view.png)
+
+---
+
 ## 🚀 Features
 
 - 🔍 Search games by name
@@ -50,11 +56,5 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 📸 Screenshots
-
-![app-view.png](screenshots/app-view.png)
 
 ---
