@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, Fragment } from 'react'
 import { useGameDetail } from '@/lib/useGameDetail'
 import { Dialog } from '@headlessui/react'
-import { Fragment } from 'react'
-import Loading from "@/components/Loading";
+import { motion, AnimatePresence } from 'framer-motion'
+import Loading from '@/components/Loading'
 
 type GameModalProps = {
     gameId: number
@@ -14,70 +15,90 @@ type GameModalProps = {
 export default function GameModal({ gameId, isOpen, onClose }: GameModalProps) {
     const { data, isLoading, isError } = useGameDetail(gameId)
 
+    // Scroll lock
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => {
+            document.body.style.overflow = ''
+        }
+    }, [isOpen])
+
     return (
-        <Dialog open={isOpen} onClose={onClose} as={Fragment}>
-            <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
-                <Dialog.Panel className="bg-zinc-900 text-white max-w-5xl w-full rounded-xl shadow-xl p-6 overflow-y-auto max-h-[90vh] relative">
-                    {/* Close button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl"
-                    >
-                        ×
-                    </button>
+        <AnimatePresence>
+            {isOpen && (
+                <Dialog open={isOpen} onClose={onClose} as={Fragment}>
+                    <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                        <motion.div
+                            key="modal"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Dialog.Panel className="bg-zinc-900 text-white max-w-5xl w-full rounded-xl shadow-xl p-6 overflow-y-auto max-h-[90vh] relative">
+                                {/* Close button */}
+                                <button
+                                    onClick={onClose}
+                                    className="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl"
+                                >
+                                    ×
+                                </button>
 
-                    {/* Loading / Error */}
-                    {isLoading && <Loading/>}
-                    {isError && <p className="text-center text-red-400">Chyba při načítání detailu.</p>}
+                                {/* Loading / Error */}
+                                {isLoading && <Loading />}
+                                {isError && <p className="text-center text-red-400">Chyba při načítání detailu.</p>}
 
-                    {/* Content */}
-                    {data && (
-                        <>
-                            {/* Title */}
-                            <Dialog.Title className="text-3xl font-bold mb-4">{data.name}</Dialog.Title>
+                                {/* Content */}
+                                {data && (
+                                    <>
+                                        {/* Title */}
+                                        <Dialog.Title className="text-3xl font-bold mb-4">{data.name}</Dialog.Title>
 
+                                        {/* Image */}
+                                        {data.background_image && (
+                                            <img
+                                                src={data.background_image}
+                                                alt={data.name}
+                                                className="w-full h-64 object-cover rounded-lg mb-6"
+                                            />
+                                        )}
 
-                            {/* Image */}
-                            {data.background_image && (
-                                <img
-                                    src={data.background_image}
-                                    alt={data.name}
-                                    className="w-full h-64 object-cover rounded-lg mb-6"
-                                />
-                            )}
+                                        {/* Info Grid */}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-sm text-zinc-300">
+                                            <div>
+                                                <p className="mb-1">📅 Vydání:</p>
+                                                <p className="text-white">{data.released || 'Neznámé'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="mb-1">⭐ Hodnocení:</p>
+                                                <p className="text-yellow-400">{data.rating?.toFixed(1) ?? 'N/A'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="mb-1">🏷️ Žánry:</p>
+                                                <p className="text-white">
+                                                    {data.genres?.map((g) => g.name).join(', ') || 'Neznámé'}
+                                                </p>
+                                            </div>
+                                        </div>
 
-                            {/* Info Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-sm text-zinc-300">
-                                <div>
-                                    <p className="mb-1">📅 Vydání:</p>
-                                    <p className="text-white">{data.released || 'Neznámé'}</p>
-                                </div>
-                                <div>
-                                    <p className="mb-1">⭐ Hodnocení:</p>
-                                    <p className="text-yellow-400">{data.rating?.toFixed(1) ?? 'N/A'}</p>
-                                </div>
-                                <div>
-                                    <p className="mb-1">🏷️ Žánry:</p>
-                                    <p className="text-white">
-                                        {data.genres?.map((g) => g.name).join(', ') || 'Neznámé'}
-                                    </p>
-                                </div>
-
-
-
-                            </div>
-
-                            {/* Description */}
-                            {data.description_raw && (
-                                <div className="mb-4 text-sm leading-relaxed text-zinc-300">
-                                    <h3 className="text-lg font-semibold mb-2 text-white">📖 Popis</h3>
-                                    <p>{data.description_raw}</p>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </Dialog.Panel>
-            </div>
-        </Dialog>
+                                        {/* Description */}
+                                        {data.description_raw && (
+                                            <div className="mb-4 text-sm leading-relaxed text-zinc-300">
+                                                <h3 className="text-lg font-semibold mb-2 text-white">📖 Popis</h3>
+                                                <p>{data.description_raw}</p>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </Dialog.Panel>
+                        </motion.div>
+                    </div>
+                </Dialog>
+            )}
+        </AnimatePresence>
     )
 }

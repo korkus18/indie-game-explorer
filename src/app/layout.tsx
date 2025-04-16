@@ -11,3 +11,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </html>
     )
 }
+export const metadata = {
+    title: 'Indie Game Explorer',
+    description: 'Objevuj ty nejlepší indie hry',
+    icons: {
+        icon: '/favicon.svg',
+        shortcut: '/favicon.svg',
+    },
+}
+

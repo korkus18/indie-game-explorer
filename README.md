@@ -7,7 +7,7 @@ A modern and stylish web app for discovering indie games using the [RAWG Video G
 ## 📸 Screenshots
 
 ![app-view.png](screenshots/app-view.png)
-
+![detail.png](screenshots/detail.png)
 ---
 
 ## 🚀 Features

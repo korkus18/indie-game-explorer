@@ -7,7 +7,6 @@ import GameCard from '@/components/GameCard'
 import Loading from '@/components/Loading'
 import GameModal from '@/components/GameModal'
 import HeroGame from '@/components/TopGame'
-import { XMarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 const platforms = [
     { id: 4, name: 'PC' },
@@ -56,7 +55,6 @@ export default function Home() {
                     <div className="flex flex-col lg:flex-row items-stretch gap-4">
                         {/* SEARCH */}
                         <div className="flex flex-1 items-center bg-zinc-700 rounded-full px-5 py-3 shadow-inner">
-                            <MagnifyingGlassIcon className="w-5 h-5 text-zinc-400 mr-3"/>
                             <input
                                 type="text"
                                 placeholder="Hledej mezi stovkami her..."
